@@ -1,9 +1,9 @@
-using ContosoPizza.Services;
-using ContosoPizza.Models;
+using TiduPizza.Services;
+using TiduPizza.Models;
 using Microsoft.AspNetCore.Mvc;
-using ContosoPizza.Models.DTOs;
+using TiduPizza.Models.DTOs;
 
-namespace ContosoPizza.Controllers;
+namespace TiduPizza.Controllers;
 
 [ApiController]
 [Route("[controller]")]

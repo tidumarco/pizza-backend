@@ -1,5 +1,5 @@
-using ContosoPizza.Data;
-using ContosoPizza.Services;
+using TiduPizza.Data;
+using TiduPizza.Services;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +10,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<PizzaService>();
 builder.Services.AddScoped<OrderService>();
 
-builder.Services.AddSqlite<PizzaContext>("Data Source=ContosoPizza.db");
+builder.Services.AddSqlite<PizzaContext>("Data Source=TiduPizza.db");
 builder.Services.AddSqlite<PromotionsContext>("Data Source=Promotions/Promotions.db");
 builder.Services.AddScoped<PizzaService>();
 
@@ -49,6 +49,6 @@ app.MapControllers();
 
 app.CreateDbIfNotExists();
 
-app.MapGet("/", () => @"Contoso Pizza management API. Navigate to /swagger to open the Swagger test UI.");
+app.MapGet("/", () => @"Tidu Pizza management API. Navigate to /swagger to open the Swagger test UI.");
 
 app.Run();

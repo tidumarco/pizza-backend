@@ -1,5 +1,5 @@
-﻿using ContosoPizza.Models;
-using ContosoPizza.Models.DTOs;
+﻿using TiduPizza.Models;
+using TiduPizza.Models.DTOs;
 
 public class PizzaDTO
 {

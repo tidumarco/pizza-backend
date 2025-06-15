@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace ContosoPizza.Migrations
+namespace TiduPizza.Migrations
 {
     /// <inheritdoc />
     public partial class ModelRevisions : Migration

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using ContosoPizza.Models;
+using TiduPizza.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoPizza.Data;
+namespace TiduPizza.Data;
 
 public partial class PromotionsContext : DbContext
 {

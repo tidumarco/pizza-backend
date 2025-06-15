@@ -1,4 +1,4 @@
-namespace ContosoPizza.Data;
+namespace TiduPizza.Data;
 
 public static class Extensions
 {

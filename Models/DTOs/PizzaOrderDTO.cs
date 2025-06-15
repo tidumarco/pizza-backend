@@ -1,4 +1,4 @@
-﻿namespace ContosoPizza.Models.DTOs
+﻿namespace TiduPizza.Models.DTOs
 {
     public class PizzaOrderDTO
     {

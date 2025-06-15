@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace ContosoPizza.Models.DTOs
+namespace TiduPizza.Models.DTOs
 {
     public class ToppingDTO
     {

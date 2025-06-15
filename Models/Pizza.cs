@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ContosoPizza.Models;
+namespace TiduPizza.Models;
 
 public class Pizza
 {

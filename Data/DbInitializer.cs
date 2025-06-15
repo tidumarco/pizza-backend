@@ -1,6 +1,6 @@
-using ContosoPizza.Models;
+using TiduPizza.Models;
 
-namespace ContosoPizza.Data
+namespace TiduPizza.Data
 {
     public static class DbInitializer
     {

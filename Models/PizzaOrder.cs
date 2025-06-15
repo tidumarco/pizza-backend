@@ -1,4 +1,4 @@
-﻿namespace ContosoPizza.Models
+﻿namespace TiduPizza.Models
 {
     public class PizzaOrder
     {

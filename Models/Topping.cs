@@ -1,4 +1,4 @@
-namespace ContosoPizza.Models;
+namespace TiduPizza.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 

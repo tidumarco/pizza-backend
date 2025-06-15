@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "ContosoPizza": {
+    "TiduPizza": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

@@ -1,9 +1,9 @@
-﻿using ContosoPizza.Models;
-using ContosoPizza.Data;
+﻿using TiduPizza.Models;
+using TiduPizza.Data;
 using Microsoft.EntityFrameworkCore;
-using ContosoPizza.Models.DTOs;
+using TiduPizza.Models.DTOs;
 
-namespace ContosoPizza.Services;
+namespace TiduPizza.Services;
 
 public class OrderService
 {

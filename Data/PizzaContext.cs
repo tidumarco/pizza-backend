@@ -1,7 +1,7 @@
-using ContosoPizza.Models;
+using TiduPizza.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoPizza.Data;
+namespace TiduPizza.Data;
 
 public class PizzaContext : DbContext
 {
