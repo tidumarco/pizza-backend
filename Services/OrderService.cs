@@ -1,6 +1,7 @@
 ﻿using ContosoPizza.Models;
 using ContosoPizza.Data;
 using Microsoft.EntityFrameworkCore;
+using ContosoPizza.Models.DTOs;
 
 namespace ContosoPizza.Services;
 
@@ -13,29 +14,58 @@ public class OrderService
         _context = context;
     }
 
-    public IEnumerable<Order> GetAll()
+    public IEnumerable<OrderDTO> GetAll()
     {
         return _context.Orders
-            .Include(o => o.PizzaOrders)
-                .ThenInclude(po => po.Pizza)
-                    .ThenInclude(p => p.Toppings)
-            .Include(o => o.PizzaOrders)
-                .ThenInclude(po => po.Pizza)
-                    .ThenInclude(p => p.Sauce)
-            .ToList();
+                    .Include(o => o.PizzaOrders)
+                            .ThenInclude(p => p.Pizza.Toppings)
+                    .Include(o => o.PizzaOrders)
+                            .ThenInclude(p => p.Pizza.Sauce)
+                    .AsNoTracking()
+                    .Select(o => new OrderDTO
+                    {
+                        Id = o.Id,
+                        Name = o.Name,
+                        CreatedAt = o.CreatedAt,
+                        PizzaOrders = o.PizzaOrders.Select(po => new PizzaDTO
+                        {
+                            Id = po.Pizza.Id,
+                            Name = po.Pizza.Name,
+                            Sauce = po.Pizza.Sauce == null ? null : new SauceDTO
+                            {
+                                Id = po.Pizza.Sauce.Id,
+                                Name = po.Pizza.Sauce.Name
+                            },
+                            Toppings = po.Pizza.Toppings.Select(t => new ToppingDTO
+                            {
+                                Id = t.Id,
+                                Name = t.Name
+                            }).ToList()
+                        }).ToList()
+
+                    })
+                    .ToList();
     }
 
-
-    public Order? GetById(int id)
+    public OrderDTO? GetById(int id)
     {
         return _context.Orders
             .Include(o => o.PizzaOrders)
-                .ThenInclude(po => po.Pizza)
-                    .ThenInclude(p => p.Toppings)
+                    .ThenInclude(p => p.Pizza.Toppings)
             .Include(o => o.PizzaOrders)
-                .ThenInclude(po => po.Pizza)
-                    .ThenInclude(p => p.Sauce)
+                    .ThenInclude(p => p.Pizza.Sauce)
             .AsNoTracking()
+            .Select(o => new OrderDTO
+            {
+                Id = o.Id,
+                Name = o.Name,
+                CreatedAt = o.CreatedAt,
+                PizzaOrders = o.PizzaOrders.Select(po => new PizzaDTO
+                {
+                    Id = po.Pizza.Id,
+                    Name = po.Pizza.Name
+                }).ToList()
+            })
             .SingleOrDefault(o => o.Id == id);
     }
 
@@ -58,7 +88,6 @@ public class OrderService
             return;
         }
 
-        // Remove all PizzaOrders entries for this order
         var pizzaOrders = _context.PizzaOrders.Where(po => po.OrderId == id);
         _context.PizzaOrders.RemoveRange(pizzaOrders);
 
@@ -75,11 +104,11 @@ public class OrderService
             ?? throw new InvalidOperationException("Pizza not found");
 
         Order order;
+
         if (orderId.HasValue)
         {
             order = _context.Orders
                 .Include(o => o.PizzaOrders)
-                .ThenInclude(po => po.Pizza)
                 .FirstOrDefault(o => o.Id == orderId.Value)
                 ?? throw new InvalidOperationException("Order not found");
         }
@@ -91,23 +120,34 @@ public class OrderService
                 CreatedAt = DateTime.UtcNow,
                 PizzaOrders = new List<PizzaOrder>()
             };
+
             _context.Orders.Add(order);
             _context.SaveChanges();
         }
 
-        // Check if the pizza is already in the order
-        if (order.PizzaOrders.Any(po => po.PizzaId == pizzaId))
+        bool alreadyExists = _context.PizzaOrders
+            .Any(po => po.OrderId == order.Id && po.PizzaId == pizzaId);
+
+        if (alreadyExists)
         {
             throw new InvalidOperationException("Pizza is already in this order");
         }
 
-        // Add to PizzaOrders
-        var pizzaOrder = new PizzaOrder { PizzaId = pizzaId, OrderId = order.Id };
-        _context.PizzaOrders.Add(pizzaOrder);
+        var pizzaOrder = new PizzaOrder
+        {
+            PizzaId = pizzaId,
+            OrderId = order.Id
+        };
 
+        _context.PizzaOrders.Add(pizzaOrder);
         _context.SaveChanges();
-        return order;
+
+        return _context.Orders
+            .Include(o => o.PizzaOrders)
+                .ThenInclude(po => po.Pizza)
+            .First(o => o.Id == order.Id);
     }
+
 
     public void RemovePizzaFromOrder(int orderId, int pizzaId)
     {
@@ -118,4 +158,37 @@ public class OrderService
         _context.PizzaOrders.Remove(pizzaOrder);
         _context.SaveChanges();
     }
+
+    public Order SubmitOrder(List<int> pizzaIds)
+    {
+        if (pizzaIds == null || !pizzaIds.Any())
+        {
+            throw new InvalidOperationException("No pizzas selected for the order.");
+        }
+
+        var pizzas = _context.Pizzas
+            .Where(p => pizzaIds.Contains(p.Id))
+            .ToList();
+
+        if (pizzas.Count != pizzaIds.Count)
+        {
+            throw new InvalidOperationException("One or more pizzas not found.");
+        }
+
+        var order = new Order
+        {
+            Name = $"Order {DateTime.UtcNow:yyyyMMdd-HHmmss}",
+            CreatedAt = DateTime.UtcNow,
+            PizzaOrders = pizzaIds.Select(pizzaId => new PizzaOrder
+            {
+                PizzaId = pizzaId
+            }).ToList()
+        };
+
+        _context.Orders.Add(order);
+        _context.SaveChanges();
+
+        return order;
+    }
+
 }

@@ -1,6 +1,7 @@
 ﻿using ContosoPizza.Models;
 using ContosoPizza.Data;
 using Microsoft.EntityFrameworkCore;
+using ContosoPizza.Models.DTOs;
 
 namespace ContosoPizza.Services;
 
@@ -13,23 +14,71 @@ public class PizzaService
         _context = context;
     }
 
-    public IEnumerable<Pizza> GetAll()
+    public IEnumerable<PizzaDTO> GetAll()
     {
         return _context.Pizzas
             .Include(p => p.Sauce)
             .Include(p => p.Toppings)
             .Include(p => p.PizzaOrders)
                 .ThenInclude(po => po.Order)
+            .Select(pizza => new PizzaDTO
+            {
+                Id = pizza.Id,
+                Name = pizza.Name,
+                Sauce = pizza.Sauce == null ? null : new SauceDTO
+                {
+                    Id = pizza.Sauce.Id,
+                    Name = pizza.Sauce.Name
+                },
+                Toppings = pizza.Toppings.Select(t => new ToppingDTO
+                {
+                    Id = t.Id,
+                    Name = t.Name
+                }).ToList(),
+                PizzaOrders = pizza.PizzaOrders.Select(po => new PizzaOrderDTO
+                {
+                    OrderId = po.OrderId,
+                    Order = new OrderDTO
+                    {
+                        Id = po.Order.Id,
+                        CreatedAt = po.Order.CreatedAt
+                    }
+                }).ToList()
+            })
             .ToList();
     }
 
 
-    public Pizza? GetById(int id)
+    public PizzaDTO? GetById(int id)
     {
         return _context.Pizzas
             .Include(p => p.Toppings)
             .Include(p => p.Sauce)
             .Include(p => p.PizzaOrders)
+            .Select(pizza => new PizzaDTO
+            {
+                Id = pizza.Id,
+                Name = pizza.Name,
+                Sauce = pizza.Sauce == null ? null : new SauceDTO
+                {
+                    Id = pizza.Sauce.Id,
+                    Name = pizza.Sauce.Name
+                },
+                Toppings = pizza.Toppings.Select(t => new ToppingDTO
+                {
+                    Id = t.Id,
+                    Name = t.Name
+                }).ToList(),
+                PizzaOrders = pizza.PizzaOrders.Select(po => new PizzaOrderDTO
+                {
+                    OrderId = po.OrderId,
+                    Order = new OrderDTO
+                    {
+                        Id = po.Order.Id,
+                        CreatedAt = po.Order.CreatedAt
+                    }
+                }).ToList()
+            })
             .AsNoTracking()
             .SingleOrDefault(p => p.Id == id);
     }
@@ -82,7 +131,6 @@ public class PizzaService
 
         if (pizzaToDelete != null)
         {
-            // Remove all PizzaOrders entries for this pizza
             var pizzaOrders = _context.PizzaOrders.Where(po => po.PizzaId == id);
             _context.PizzaOrders.RemoveRange(pizzaOrders);
 

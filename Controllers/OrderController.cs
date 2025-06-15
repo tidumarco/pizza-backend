@@ -1,7 +1,9 @@
 ﻿using ContosoPizza.Models;
+using ContosoPizza.Models.DTOs;
 using ContosoPizza.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContosoPizza.Controllers;
 
@@ -83,10 +85,18 @@ public class OrderController : ControllerBase
             return NotFound(new { message = ex.Message });
         }
     }
-}
 
-public class AddPizzaToOrderDto
-{
-    public int PizzaId { get; set; }
-    public int? OrderId { get; set; }
+    [HttpPost("Submit")]
+    public IActionResult SubmitOrder([FromBody] SubmitOrderDto dto)
+    {
+        try
+        {
+            var order = _orderService.SubmitOrder(dto.PizzaIds);
+            return Ok(order);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }

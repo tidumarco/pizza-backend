@@ -1,6 +1,7 @@
 using ContosoPizza.Services;
 using ContosoPizza.Models;
 using Microsoft.AspNetCore.Mvc;
+using ContosoPizza.Models.DTOs;
 
 namespace ContosoPizza.Controllers;
 
@@ -16,13 +17,13 @@ public class PizzaController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Pizza> GetAll()
+    public IEnumerable<PizzaDTO> GetAll()
     {
         return _service.GetAll();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Pizza> GetById(int id)
+    public ActionResult<PizzaDTO> GetById(int id)
     {
         var pizza = _service.GetById(id);
 
