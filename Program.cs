@@ -9,10 +9,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<PizzaService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<BeverageService>();
 
 builder.Services.AddSqlite<PizzaContext>("Data Source=TiduPizza.db");
-builder.Services.AddSqlite<PromotionsContext>("Data Source=Promotions/Promotions.db");
-builder.Services.AddScoped<PizzaService>();
 
 builder.Services.AddCors(options =>
 {

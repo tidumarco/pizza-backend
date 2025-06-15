@@ -43,7 +43,8 @@ public class PizzaService
                         Id = po.Order.Id,
                         CreatedAt = po.Order.CreatedAt
                     }
-                }).ToList()
+                }).ToList(),
+                Price = pizza.Price
             })
             .ToList();
     }
@@ -77,8 +78,9 @@ public class PizzaService
                         Id = po.Order.Id,
                         CreatedAt = po.Order.CreatedAt
                     }
-                }).ToList()
-            })
+                }).ToList(),
+				Price = pizza.Price
+			})
             .AsNoTracking()
             .SingleOrDefault(p => p.Id == id);
     }

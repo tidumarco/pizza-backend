@@ -10,8 +10,11 @@ public class PizzaContext : DbContext
     public DbSet<Sauce> Sauces { get; set; }
     public DbSet<Topping> Toppings { get; set; }
     public DbSet<PizzaOrder> PizzaOrders { get; set; }
+	public DbSet<Beverage> Beverages { get; set; }
+	public DbSet<OrderBeverage> OrderBeverages { get; set; }
 
-    public PizzaContext(DbContextOptions<PizzaContext> options)
+
+	public PizzaContext(DbContextOptions<PizzaContext> options)
         : base(options)
     {
     }
@@ -39,5 +42,18 @@ public class PizzaContext : DbContext
         modelBuilder.Entity<Pizza>()
             .HasMany(p => p.Toppings)
             .WithMany(t => t.Pizzas);
-    }
+
+		modelBuilder.Entity<OrderBeverage>()
+		 .HasKey(ob => new { ob.OrderId, ob.BeverageId });
+
+		modelBuilder.Entity<OrderBeverage>()
+		.HasOne(ob => ob.Order)
+		.WithMany(o => o.OrderBeverages)
+		.HasForeignKey(ob => ob.OrderId);
+
+		modelBuilder.Entity<OrderBeverage>()
+		.HasOne(ob => ob.Beverage)
+		.WithMany(b => b.OrderBeverages)
+		.HasForeignKey(ob => ob.BeverageId);
+	}
 }

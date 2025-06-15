@@ -6,5 +6,7 @@
         public string Name { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<PizzaDTO> PizzaOrders { get; set; } = new();
+        public List<BeverageDTO> Beverages { get; set; } = new();
+
     }
 }

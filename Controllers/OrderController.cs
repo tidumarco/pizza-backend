@@ -35,21 +35,22 @@ public class OrderController : ControllerBase
         return Ok(order);
     }
 
-    [HttpPost]
-    public IActionResult AddPizzaToOrder([FromBody] AddPizzaToOrderDto dto)
-    {
-        try
-        {
-            var order = _orderService.AddPizzaToOrder(dto.PizzaId, dto.OrderId);
-            return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, order);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-    }
+	[HttpPost("item")]
+	public IActionResult AddItemToOrder([FromBody] AddItemToOrderDto dto)
+	{
+		try
+		{
+			var order = _orderService.AddItemToOrder(dto.ItemId, dto.OrderId, dto.ItemType.ToLower());
+			return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, order);
+		}
+		catch (InvalidOperationException ex)
+		{
+			return BadRequest(new { message = ex.Message });
+		}
+	}
 
-    [HttpDelete("{id}")]
+
+	[HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
         try
@@ -72,26 +73,12 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpDelete("{orderId}/pizza/{pizzaId}")]
-    public IActionResult RemovePizzaFromOrder(int orderId, int pizzaId)
-    {
-        try
-        {
-            _orderService.RemovePizzaFromOrder(orderId, pizzaId);
-            return Ok();
-        }
-        catch (InvalidOperationException ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
-    }
-
     [HttpPost("Submit")]
     public IActionResult SubmitOrder([FromBody] SubmitOrderDto dto)
     {
         try
         {
-            var order = _orderService.SubmitOrder(dto.PizzaIds);
+            var order = _orderService.SubmitOrder(dto.PizzaIds, dto.BeverageIds);
             return Ok(order);
         }
         catch (InvalidOperationException ex)
