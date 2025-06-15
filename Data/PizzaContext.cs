@@ -55,5 +55,20 @@ public class PizzaContext : DbContext
 		.HasOne(ob => ob.Beverage)
 		.WithMany(b => b.OrderBeverages)
 		.HasForeignKey(ob => ob.BeverageId);
-	}
+
+
+        modelBuilder.Entity<Pizza>()
+         .HasMany(p => p.Toppings)
+         .WithMany(t => t.Pizzas)
+         .UsingEntity<Dictionary<string, object>>(
+         "PizzaTopping",
+         j => j.HasOne<Topping>().WithMany().HasForeignKey("ToppingId"),
+         j => j.HasOne<Pizza>().WithMany().HasForeignKey("PizzaId"),
+         j =>
+         {
+             j.HasKey("PizzaId", "ToppingId");
+             j.ToTable("PizzaTopping");
+         });
+
+    }
 }

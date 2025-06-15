@@ -2,8 +2,6 @@
 using TiduPizza.Models.DTOs;
 using TiduPizza.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 
 namespace TiduPizza.Controllers;
 
@@ -62,10 +60,6 @@ public class OrderController : ControllerBase
             }
             _orderService.DeleteById(id);
             return NoContent();
-        }
-        catch (SqliteException ex)
-        {
-            return BadRequest(new { message = "Failed to delete order due to database constraint: " + ex.Message });
         }
         catch (InvalidOperationException ex)
         {

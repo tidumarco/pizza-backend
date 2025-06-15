@@ -1,8 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using TiduPizza.Data;
 using TiduPizza.Services;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+var connection = "Data Source=tcp:tidu-server.database.windows.net;Initial Catalog=tidu-pizzeria;User Id=tidu-pizzeria;Password=Ostracismo9.;Encrypt=True;";
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -11,7 +13,9 @@ builder.Services.AddScoped<PizzaService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<BeverageService>();
 
-builder.Services.AddSqlite<PizzaContext>("Data Source=TiduPizza.db");
+
+builder.Services.AddDbContext<PizzaContext>(options => options.UseSqlServer(connection));
+
 
 builder.Services.AddCors(options =>
 {
@@ -26,9 +30,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        //options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-        //options.JsonSerializerOptions.WriteIndented = true;
-
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
@@ -42,8 +43,8 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
 app.UseCors("AllowLocalhost");
+app.UseAuthorization();
 app.MapControllers();
 
 app.CreateDbIfNotExists();
