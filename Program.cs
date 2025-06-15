@@ -13,9 +13,7 @@ builder.Services.AddScoped<PizzaService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<BeverageService>();
 
-
 builder.Services.AddDbContext<PizzaContext>(options => options.UseSqlServer(connection));
-
 
 builder.Services.AddCors(options =>
 {
