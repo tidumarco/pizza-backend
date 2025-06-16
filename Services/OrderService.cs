@@ -82,7 +82,6 @@ public class OrderService
             .SingleOrDefault(o => o.Id == id);
     }
 
-
     public Order Create(Order newOrder)
     {
         _context.Orders.Add(newOrder);
@@ -169,8 +168,6 @@ public class OrderService
 			.First(o => o.Id == order.Id);
 	}
 
-
-
 	public void RemoveItemFromOrder(int orderId, int itemId, string itemType)
 	{
 		if (itemType == "pizza")
@@ -193,7 +190,6 @@ public class OrderService
 		_context.SaveChanges();
 	}
 
-
 	public Order SubmitOrder(List<int> pizzaIds, List<int> beverageIds)
 	{
 		if ((pizzaIds == null || !pizzaIds.Any()) && (beverageIds == null || !beverageIds.Any()))
@@ -214,6 +210,4 @@ public class OrderService
 
 		return order;
 	}
-
-
 }

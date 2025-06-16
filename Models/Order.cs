@@ -7,5 +7,4 @@ public class Order
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public List<PizzaOrder> PizzaOrders { get; set; }
 	public List<OrderBeverage> OrderBeverages { get; set; } = new();
-
 }

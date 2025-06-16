@@ -7,5 +7,4 @@
         public int BeverageId { get; set; }
         public Beverage Beverage { get; set; }
     }
-
 }

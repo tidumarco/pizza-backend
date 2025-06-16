@@ -49,7 +49,6 @@ public class PizzaService
             .ToList();
     }
 
-
     public PizzaDTO? GetById(int id)
     {
         return _context.Pizzas

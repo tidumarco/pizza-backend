@@ -27,8 +27,7 @@ public class BeverageService
             })
             .ToList();
     }
-
-
+    
     public BeverageDTO? GetById(int id)
     {
         return _context.Beverages

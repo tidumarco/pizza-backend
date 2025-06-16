@@ -7,5 +7,4 @@
         public decimal Price { get; set; }
         public List<OrderBeverage> OrderBeverages { get; set; } = new();
     }
-
 }
