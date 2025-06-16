@@ -2,7 +2,7 @@ name: Deploy .NET to Azure Static Web Apps
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
